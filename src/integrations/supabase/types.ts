@@ -14,13 +14,91 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      employee_logs: {
+        Row: {
+          created_at: string
+          employee_id: number
+          employee_name: string | null
+          event_type: string
+          id: string
+          location: string | null
+          timestamp: string
+        }
+        Insert: {
+          created_at?: string
+          employee_id: number
+          employee_name?: string | null
+          event_type: string
+          id?: string
+          location?: string | null
+          timestamp?: string
+        }
+        Update: {
+          created_at?: string
+          employee_id?: number
+          employee_name?: string | null
+          event_type?: string
+          id?: string
+          location?: string | null
+          timestamp?: string
+        }
+        Relationships: []
+      }
+      log_embeddings: {
+        Row: {
+          content: string
+          created_at: string
+          embedding: string | null
+          id: string
+          log_id: string | null
+          metadata: Json | null
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          embedding?: string | null
+          id?: string
+          log_id?: string | null
+          metadata?: Json | null
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          embedding?: string | null
+          id?: string
+          log_id?: string | null
+          metadata?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "log_embeddings_log_id_fkey"
+            columns: ["log_id"]
+            isOneToOne: false
+            referencedRelation: "employee_logs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      match_log_embeddings: {
+        Args: {
+          filter_metadata?: Json
+          match_count?: number
+          match_threshold?: number
+          query_embedding: string
+        }
+        Returns: {
+          content: string
+          id: string
+          log_id: string
+          metadata: Json
+          similarity: number
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never
